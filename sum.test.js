@@ -52,3 +52,65 @@ test('two plus two is four', () => {
     expect(value).toBe(4);
     expect(value).toEqual(4);
   });
+
+  test('adding floating point numbers', () => {
+    const value = 0.1 + 0.2;
+    //expect(value).toBe(0.3);           This won't work because of rounding error
+    expect(value).toBeCloseTo(0.3); // This works.
+  });
+
+  test('there is no I in team', () => {
+    expect('team').not.toMatch(/I/);
+  });
+  
+  test('but there is a "stop" in Christoph', () => {
+    expect('Christoph').toMatch(/stop/);
+  });
+
+  
+function fetchData(callback) {
+    setTimeout(() => {
+        callback('peanut butter')
+    }, 100)
+}
+
+function fetchDataPromisse(callback) {
+    return new Promise((resolve) => {
+
+        setTimeout(() => {
+            resolve('peanut butter')
+        }, 100)
+    })
+}
+/*
+  // Don't do this!
+test('the data is peanut butter', () => {
+    function callback(data) {
+      expect(data).toBe('peanut butter');
+    }
+  
+    fetchData(callback);
+  });*/
+
+  test("the data is peanut butter", done => {
+      function callback(data) {
+          try {
+            expect(data).toBe("peanut butter");
+            done();
+          }
+          catch {
+            done("The data is not peanut butter");
+          }
+      }
+    fetchData(callback);
+  });
+
+  test('the data is peanut butter', () => {
+    return fetchDataPromisse().then(data => {
+      expect(data).toBe('peanut butter');
+    });
+  });
+
+  test('the data is peanut butter', () => {
+    return expect(fetchDataPromisse()).resolves.toBe('peanut butter');
+  });
