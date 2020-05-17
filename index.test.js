@@ -1,4 +1,6 @@
-const sum = require('./sum');
+const sum = require('./index');
+jest.mock('./foo'); // this happens automatically with automocking
+const foo = require('./foo');
 
 test('adds 1 + 2 to equal 3', () => {
   expect(sum(1, 2)).toBe(3);
@@ -304,4 +306,42 @@ test('Mock Return Values', () => {
   // > [11]
   console.log(filterTestFn.mock.calls);
   // > [ [11], [12] ]
+})
+
+
+test('Mock Implementations', () => {
+  const myMockFn = jest.fn(cb => cb(null, true));
+
+  myMockFn((err, val) => console.log(val));
+  // > true
+})
+
+test('foo is a mock function', () => {
+  // foo is a mock function
+  foo.mockImplementation(() => 42);
+  foo();
+  // > 42
+})
+
+test('mockImplementation', () => {
+  const myMockFn = jest
+  .fn()
+  .mockImplementationOnce(cb => cb(null, true))
+  .mockImplementationOnce(cb => cb(null, false));
+
+  myMockFn((err, val) => console.log(val));
+  // > true
+
+  myMockFn((err, val) => console.log(val));
+  // > false
+})
+
+test('mockImplementation_v2', () => {
+  const myMockFn = jest
+  .fn(() => 'default')
+  .mockImplementationOnce(() => 'first call')
+  .mockImplementationOnce(() => 'second call');
+
+  console.log(myMockFn(), myMockFn(), myMockFn(), myMockFn());
+  // > 'first call', 'second call', 'default', 'default'
 })
