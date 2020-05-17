@@ -209,11 +209,19 @@ test('Mock tests', ()=> {
   // The return value of the first call to the function was 'return value'
   expect(someMockFunction.mock.results[0].value).toBe('return value');
 
+  const someMockContructor = jest.fn();
+
+  const test = new someMockContructor();
+  
+  test.name = "test";
+
+  const test_2 = new someMockContructor();
+
   // This function was instantiated exactly twice
-  expect(someMockFunction.mock.instances.length).toBe(2);
+  expect(someMockContructor.mock.instances.length).toBe(2);
 
   // The object returned by the first instantiation of this function
   // had a `name` property whose value was set to 'test'
-  expect(someMockFunction.mock.instances[0].name).toEqual('test');
+  expect(someMockContructor.mock.instances[0].name).toEqual('test');
 
 })
