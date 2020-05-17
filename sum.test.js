@@ -266,3 +266,42 @@ test("mock promise resolution", () => {
   expect(mock("foo")).resolves.toBe("bar");
   expect(mock).toHaveBeenCalledWith("foo");
 });
+
+
+const doAdd = (a, b, callback) => {
+  callback(a + b);
+};
+
+test("calls callback with arguments added", () => {
+  const mockCallback = jest.fn();
+  doAdd(1, 2, mockCallback);
+  expect(mockCallback).toHaveBeenCalledWith(3);
+});
+
+test('Mock Return Values', () => {
+  const myMock = jest.fn();
+  console.log(myMock());
+  // > undefined
+
+  myMock
+    .mockReturnValueOnce(10)
+    .mockReturnValueOnce('x')
+    .mockReturnValue(true);
+
+  console.log(myMock(), myMock(), myMock(), myMock());
+})
+
+test('Mock Return Values', () => {
+  const filterTestFn = jest.fn();
+
+  // Make the mock return `true` for the first call,
+  // and `false` for the second call
+  filterTestFn.mockReturnValueOnce(true).mockReturnValueOnce(false);
+
+  const result = [11, 12].filter(num => filterTestFn(num));
+
+  console.log(result);
+  // > [11]
+  console.log(filterTestFn.mock.calls);
+  // > [ [11], [12] ]
+})
