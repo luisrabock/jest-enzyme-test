@@ -345,3 +345,51 @@ test('mockImplementation_v2', () => {
   console.log(myMockFn(), myMockFn(), myMockFn(), myMockFn());
   // > 'first call', 'second call', 'default', 'default'
 })
+
+test('return this', () => {
+  const myObj = {
+    myMethod: jest.fn().mockReturnThis(),
+  };
+  
+  // is the same as
+  
+  const otherObj = {
+    myMethod: jest.fn(function () {
+      return this;
+    }),
+  };
+
+  console.log(myObj.myMethod());
+  console.log(otherObj.myMethod());
+})
+
+test('Mock Names', () => {
+  const myMockFn = jest
+    .fn()
+    .mockReturnValue('default')
+    .mockImplementation(scalar => 42 + scalar)
+    .mockName('add42');
+
+    myMockFn();
+    expect(myMockFn).toHaveBeenCalled();
+})
+
+test('Custom matchers mock functions', () => {
+  const mockFunc = jest.fn();
+  const arg1 = 'arg1';
+  const arg2 = 'arg2';
+
+  mockFunc();
+  // The mock function was called at least once
+  expect(mockFunc).toHaveBeenCalled();
+
+  mockFunc(arg1, arg2);
+  // The mock function was called at least once with the specified args
+  expect(mockFunc).toHaveBeenCalledWith(arg1, arg2);
+
+  // The last call to the mock function was called with the specified args
+  expect(mockFunc).toHaveBeenLastCalledWith(arg1, arg2);
+
+  // All calls and the name of the mock is written as a snapshot
+  expect(mockFunc).toMatchSnapshot();
+})
