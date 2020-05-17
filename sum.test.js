@@ -212,7 +212,7 @@ test('Mock tests', ()=> {
   const someMockContructor = jest.fn();
 
   const test = new someMockContructor();
-  
+
   test.name = "test";
 
   const test_2 = new someMockContructor();
@@ -225,3 +225,44 @@ test('Mock tests', ()=> {
   expect(someMockContructor.mock.instances[0].name).toEqual('test');
 
 })
+
+
+test("mock implementation", () => {
+  const mock = jest.fn(() => "bar");
+
+  expect(mock("foo")).toBe("bar");
+  expect(mock).toHaveBeenCalledWith("foo");
+});
+
+test("also mock implementation", () => {
+  const mock = jest.fn().mockImplementation(() => "bar");
+
+  expect(mock("foo")).toBe("bar");
+  expect(mock).toHaveBeenCalledWith("foo");
+});
+
+test("mock implementation one time", () => {
+  const mock = jest.fn().mockImplementationOnce(() => "bar");
+
+  expect(mock("foo")).toBe("bar");
+  expect(mock).toHaveBeenCalledWith("foo");
+
+  expect(mock("baz")).toBe(undefined);
+  expect(mock).toHaveBeenCalledWith("baz");
+});
+
+test("mock return value", () => {
+  const mock = jest.fn();
+  mock.mockReturnValue("bar");
+
+  expect(mock("foo")).toBe("bar");
+  expect(mock).toHaveBeenCalledWith("foo");
+});
+
+test("mock promise resolution", () => {
+  const mock = jest.fn();
+  mock.mockResolvedValue("bar");
+
+  expect(mock("foo")).resolves.toBe("bar");
+  expect(mock).toHaveBeenCalledWith("foo");
+});
